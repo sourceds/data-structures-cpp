@@ -65,7 +65,14 @@ public:
     }
     ~LinkedList()
     {
-
+        Node<T>* iter = head;
+        Node<T>* temp;
+        while (iter != NULL)
+        {
+            temp = iter;
+            iter = iter->get_link();
+            delete temp;
+        }
     }
     void insert(T data)
     {
@@ -109,12 +116,12 @@ public:
 
 int main()
 {
-    LinkedList<char> charlist;
-    charlist.insert('c');
-    charlist.insert('h');
-    charlist.insert('a');
-    charlist.print();
-    std::cout << charlist.size() << " " << charlist.length();
+    LinkedList<int64_t> ll;
+    for (int64_t i = 1; i < 100000; ++i)
+    {
+        ll.insert(i);
+    }
+    ll.print();
     return 0;
 }
 
