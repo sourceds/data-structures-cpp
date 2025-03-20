@@ -1,7 +1,9 @@
 #include <iostream>
+#include <algorithm>
 
-#ifndef LINKED_LIST
-#define LINKED_LIST
+#ifndef SINGLY_LINKED_LIST
+#define SINGLY_LINKED_LIST
+
 typedef int32_t length_t;
 
 template <typename T>
@@ -62,14 +64,14 @@ public:
     }
     LinkedList(T data)
     {
-        head = new Node<T>(data, NULL);
+        head = new Node<T>(data, nullptr);
         len = 1;
     }
     ~LinkedList()
     {
         Node<T>* iter = head;
         Node<T>* temp;
-        while (iter != NULL)
+        while (iter != nullptr)
         {
             temp = iter;
             iter = iter->get_link();
@@ -87,11 +89,11 @@ public:
         {
             //iterate
             Node<T>* iter = head;
-            while (iter->get_link() != NULL)
+            while (iter->get_link() != nullptr)
             {
                 iter = iter->get_link();
             }
-            Node<T>* new_node = new Node<T>(data, NULL);
+            Node<T>* new_node = new Node<T>(data, nullptr);
             iter->set_link(new_node);
             len++;
         }
@@ -130,7 +132,7 @@ public:
     {
         Node<T>* iter = head;
         bool find_flag = false;
-        while (iter != NULL)
+        while (iter != nullptr)
         {
             if (iter->get_data() == data)
             {
@@ -144,7 +146,7 @@ public:
     void print()
     {
         Node<T>* iter = head;
-        while (iter != NULL)
+        while (iter != nullptr)
         {
             std::cout << iter->get_data() << " ";
             iter = iter->get_link();
@@ -173,4 +175,5 @@ public:
 };
 
 #endif
+
 
