@@ -1,8 +1,8 @@
 #include <iostream>
 #include <algorithm>
 
-#ifndef SINGLY_LINKED_LIST
-#define SINGLY_LINKED_LIST
+#ifndef D_LINKED_LIST
+#define D_LINKED_LIST
 
 typedef int32_t length_t;
 
@@ -11,7 +11,8 @@ class Node
 {
 private:
     T data;
-    Node<T>* link;
+    Node<T>* prev;
+    Node<T>* next;
 public:
     Node()
     {
@@ -21,10 +22,11 @@ public:
     {
         data = _data;
     }
-    Node(T _data, Node<T>* _link)
+    Node(T _data, Node<T>* _prev, Node<T>* _next)
     {
         data = _data;
-        link = _link;
+        prev = _prev;
+        next = _next;
     }
     ~Node()
     {
@@ -35,69 +37,83 @@ public:
         data = _data;
         return;
     }
-    void set_link(Node<T>* _link)
+    void set_prev(Node<T>* _prev)
     {
-        link = _link;
+        prev = _prev;
+        return;
+    }
+    void set_next(Node<T>* _next)
+    {
+        next = _next;
         return;
     }
     T get_data()
     {
         return data;
     }
-    Node<T>* get_link()
+    Node<T>* get_prev()
     {
-        return link;
+        return prev;
+    }
+    Node<T>* get_next()
+    {
+        return next;
     }
 };
 
+// WIP
+
 template <typename T>
-class LinkedList
+class d_linked_list
 {
 private:
     Node<T>* head;
+    Node<T>* tail;
     length_t len = 0;
 public:
-    LinkedList()
+    d_linked_list()
     {
-        head = new Node<T>;
+        head = new Node<T>(0, nullptr, nullptr); //sentinel node (head)
+        tail = new Node<T>(0, nullptr, nullptr); //sentinel node (tail)
         len = 0;
     }
-    LinkedList(T data)
+    d_linked_list(T data)
     {
-        head = new Node<T>(data, nullptr);
+        Node<T>* new_node = new Node<T>;
+        head = new Node<T>(0, nullptr, new_node);
+        tail = new Node<T>(0, new_node, nullptr);
+        new_node->set_prev(head);
+        new_node->set_next(tail);
         len = 1;
     }
-    ~LinkedList()
+    ~d_linked_list()
     {
-        Node<T>* iter = head;
-        Node<T>* temp;
-        while (iter != nullptr)
+        Node<T>* iter = head->get_next();
+        while (iter != tail)
         {
-            temp = iter;
-            iter = iter->get_link();
-            delete temp;
+            iter = iter->get_next();
+            delete iter->get_prev();
         }
+        delete head;
+        delete tail;
     }
     void insert(T data)
     {
         if (len == 0)
         {
-            head->set_data(data);
+            Node<T>* new_node = new Node<T>(data, head, tail);
+            head->set_next(new_node);
+            tail->set_prev(new_node);
             len++;
         }
         else
         {
-            //iterate
-            Node<T>* iter = head;
-            while (iter->get_link() != nullptr)
-            {
-                iter = iter->get_link();
-            }
-            Node<T>* new_node = new Node<T>(data, nullptr);
-            iter->set_link(new_node);
-            len++;
+            Node<T>* new_node = new Node<T>(data, tail->get_prev(), tail);
+            tail->get_prev()->set_next(new_node);
+            tail->set_prev(new_node);
         }
     }
+    /*
     void remove(length_t index)
     {
         if (index < 0)
@@ -132,7 +148,7 @@ public:
     {
         Node<T>* iter = head;
         bool find_flag = false;
-        while (iter != nullptr)
+        while (iter != NULL)
         {
             if (iter->get_data() == data)
             {
@@ -143,13 +159,14 @@ public:
         }
         return find_flag;
     }
+    */
     void print()
     {
-        Node<T>* iter = head;
-        while (iter != nullptr)
+        Node<T>* iter = head->get_next();
+        while (iter != tail)
         {
             std::cout << iter->get_data() << " ";
-            iter = iter->get_link();
+            iter = iter->get_next();
         }
         std::cout << std::endl;
     }
@@ -161,6 +178,7 @@ public:
     {
         return len;
     }
+    /*
     T* array()
     {
         T* arr = new T[sizeof(T)*len];
@@ -172,6 +190,7 @@ public:
         }
         return arr;
     }
+    */
 };
 
 #endif
